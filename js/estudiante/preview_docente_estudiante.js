@@ -1,9 +1,7 @@
 import { estado } from "./estado_estudiante.js";
 import { llenarFiltros, renderMiniCursosDisponibles } from "./cursos_disponibles_estudiante.js";
 import { actualizarBadges, cargarItemsModulosPorCursos, normalizarAnuncios, renderAnunciosVista, renderArchivosVista, renderAsideAnuncios, renderAsideArchivos, renderAsideTareas, renderAsideVacio, renderCursosInicio, renderCursosLista, renderTareasVista } from "./inicio_estudiante.js";
-document.body.prepend(banner);
-document.body.style.paddingTop = "48px";
-document.body.classList.add("vista-previa-activa");
+
 export function mostrarBannerPreview() {
   const banner = document.createElement("div");
   banner.style.cssText = `
@@ -26,6 +24,9 @@ export function mostrarBannerPreview() {
   `;
   document.body.prepend(banner);
   document.body.style.paddingTop = "48px";
+  document.body.prepend(banner);
+document.body.style.paddingTop = "48px";
+document.body.classList.add("vista-previa-activa");
 }
 
 // ══ CARGA DE DATOS EN MODO PREVIEW ════════════════════════════════════════════
