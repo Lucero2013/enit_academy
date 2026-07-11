@@ -144,3 +144,7 @@ body.dark .btn-vista-sidebar:hover {
   margin-top: 0.5rem;
   padding-bottom: 2rem;
 }
+
+body.vista-previa-activa .aside-actividad {
+  top: calc(72px + 48px + 1.5rem);
+}
