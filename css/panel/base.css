@@ -1,0 +1,428 @@
+/* ══ Panel — Base: layout, sidebar, navegación ══ */
+/* Variables compartidas: ver css/variables.css. Aquí solo la excepción propia de esta página
+   (header_footer.css cambia --fondo antes de este archivo; el panel necesita el suyo propio) */
+:root {
+  --fondo: #fff8fc;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Nunito', sans-serif;
+  background: var(--fondo);
+  color: var(--texto);
+  min-height: 100vh;
+}
+
+.panel-contenedor {
+  display: flex;
+  min-height: calc(100vh - 72px);
+  overflow: hidden;
+}
+
+.panel-sidebar {
+  width: 230px;
+  flex-shrink: 0;
+  background: linear-gradient(175deg, #ec4899 0%, #8b5cf6 100%);
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  position: sticky;
+  top: 72px;                  /* se ancla justo debajo del header */
+  height: calc(100vh - 72px); /* ocupa exactamente el espacio restante */
+  overflow: hidden;           /* el scroll va en .nav-sidebar */
+  transition: transform 0.3s;
+  z-index: 100;
+  align-self: flex-start;     /* necesario para que sticky funcione en flex */
+}
+
+/* Brillo decorativo superior */
+.sidebar-brillo {
+  position: absolute;
+  top: -80px;
+  right: -80px;
+  width: 240px;
+  height: 240px;
+  background: radial-gradient(circle, rgba(255,255,255,0.2), transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+  flex-shrink: 0;
+}
+
+/* ── Bloque de perfil ── */
+.perfil-sidebar {
+  position: relative;
+  z-index: 1;
+  flex-shrink: 0;
+  padding: 1.6rem 1.2rem 1.1rem;
+}
+
+.perfil-sidebar-inner {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+.avatar-sidebar {
+  width: 50px;
+  height: 50px;
+  border-radius: 16px;
+  background: rgba(255,255,255,0.22);
+  border: 2px solid rgba(255,255,255,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 1.3rem;
+  flex-shrink: 0;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+}
+
+.perfil-sidebar-textos {
+  min-width: 0;
+}
+
+.nombre-sidebar {
+  font-family: 'Paytone One', sans-serif;
+  font-size: 1rem;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 148px;
+  line-height: 1.2;
+  letter-spacing: 0.01em;
+}
+
+.rol-sidebar {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.68rem;
+  color: rgba(255,255,255,0.88);
+  font-weight: 700;
+  background: rgba(255,255,255,0.15);
+  border-radius: 20px;
+  padding: 0.12rem 0.6rem;
+  margin-top: 0.3rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+.rol-sidebar i { font-size: 0.55rem; color: #fef08a; }
+
+/* ── Divisor ── */
+.sidebar-divisor {
+  position: relative;
+  z-index: 1;
+  height: 1px;
+  background: rgba(255,255,255,0.2);
+  margin: 0 1.1rem;
+  flex-shrink: 0;
+}
+
+/* ── Navegación: ocupa todo el espacio disponible ── */
+.nav-sidebar {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  flex: 1;
+  padding: 0.9rem 0.75rem;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+.nav-sidebar::-webkit-scrollbar { display: none; }
+
+.nav-btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.72rem 0.9rem;
+  border: none;
+  border-radius: 14px;
+  background: none;
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: rgba(255,255,255,0.75);
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.18s, color 0.18s, transform 0.12s;
+  flex-shrink: 0;
+}
+.nav-btn-icono {
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.88rem;
+  flex-shrink: 0;
+  transition: background 0.18s;
+}
+.nav-btn-texto { line-height: 1; }
+
+.nav-btn:hover {
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+  transform: translateX(2px);
+}
+.nav-btn:hover .nav-btn-icono { background: rgba(255,255,255,0.2); }
+
+.nav-btn.activo {
+  background: rgba(255,255,255,0.95);
+  color: var(--rosa);
+  box-shadow: 0 4px 18px rgba(0,0,0,0.18);
+  transform: none;
+}
+.nav-btn.activo .nav-btn-icono {
+  background: rgba(255, 79, 160, 0.12);
+  color: var(--rosa);
+}
+.nav-btn.activo .nav-btn-icono i { color: var(--rosa); }
+
+/* ── Footer del sidebar: cerrar sesión ── */
+.sidebar-footer {
+  position: relative;
+  z-index: 1;
+  flex-shrink: 0;
+  padding: 0 0.75rem 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.btn-salir {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.68rem 0.9rem;
+  border: 1.5px solid rgba(255,255,255,0.28);
+  border-radius: 14px;
+  background: rgba(255,255,255,0.08);
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.86rem;
+  font-weight: 700;
+  color: rgba(255,255,255,0.82);
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+  width: 100%;
+}
+.btn-salir:hover {
+  border-color: rgba(255,255,255,0.7);
+  color: #fff;
+  background: rgba(255,255,255,0.14);
+}
+.btn-salir i { font-size: 0.9rem; }
+
+/* ── Botón Vista Estudiante en sidebar (reemplaza cerrar sesión) ── */
+.btn-vista-sidebar {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.72rem 0.9rem;
+  border: 1.5px solid rgba(255,255,255,0.35);
+  border-radius: 14px;
+  background: rgba(255,255,255,0.12);
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.18s, border-color 0.18s, transform 0.12s;
+  width: 100%;
+}
+.btn-vista-sidebar:hover {
+  background: rgba(255,255,255,0.22);
+  border-color: rgba(255,255,255,0.7);
+  transform: translateX(2px);
+}
+.btn-vista-sidebar .nav-btn-icono {
+  width: 32px; height: 32px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.88rem; flex-shrink: 0;
+}
+
+
+.btn-vista-est-flotante {
+  position: fixed;
+  top: 84px;           /* justo debajo del header (~72px) + margen */
+  right: 1.4rem;
+  z-index: 1000;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.52rem 1.1rem;
+  border-radius: 50px;
+  border: none;
+  background: rgba(255,255,255,0.95);
+  backdrop-filter: blur(8px);
+  color: var(--lila);
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 4px 18px rgba(139, 92, 246, 0.22), 0 1px 4px rgba(0,0,0,0.08);
+  border: 1.5px solid rgba(139,92,246,0.18);
+  transition: transform 0.18s, box-shadow 0.18s, background 0.18s;
+  letter-spacing: 0.01em;
+}
+.btn-vista-est-flotante i {
+  font-size: 0.88rem;
+  color: var(--lila);
+}
+.btn-vista-est-flotante:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(139, 92, 246, 0.32);
+  background: #fff;
+}
+
+/* ── Cuerpo ────────────────────────────────── */
+.panel-cuerpo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.panel-seccion {
+  padding: 0;
+  flex: 1;
+}
+
+.panel-cuerpo {
+  overflow-y: auto;
+  max-height: calc(100vh - 72px);
+}
+
+#vista-cursos,
+#vista-estudiantes,
+#vista-perfil,
+#vista-crear,
+#vista-publicidad {
+  padding: 2rem 2.2rem;
+}
+
+.barra-movil {
+  display: none;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.9rem 1.2rem;
+  background: var(--blanco);
+  border-bottom: 1.5px solid var(--borde);
+}
+
+.titulo-panel { font-family: 'Paytone One', sans-serif; font-size: 1rem; color: var(--texto); }
+
+/* ── Vistas ────────────────────────────────── */
+.oculto { display: none !important; }
+
+.vista-cabecera {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 1.4rem; flex-wrap: wrap; gap: 0.7rem;
+}
+
+.vista h2, .vista-cabecera h2 {
+  font-family: 'Paytone One', sans-serif;
+  font-size: 1.5rem; color: var(--texto); margin-bottom: 1.2rem;
+}
+.vista-cabecera h2 { margin-bottom: 0; }
+.vista h3 { font-size: 1rem; font-weight: 800; color: var(--texto); margin: 1.4rem 0 0.7rem; }
+
+/* ── Pestañas ──────────────────────────────── */
+.pestanas-nav {
+  display: flex; gap: 0.5rem; margin: 1.2rem 0 1rem;
+  flex-wrap: wrap; border-bottom: 2px solid var(--borde); padding-bottom: 0.5rem;
+}
+.pestana-btn {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  padding: 0.45rem 1rem; border: 1.5px solid var(--borde);
+  border-radius: 20px; background: none;
+  font-family: 'Nunito', sans-serif; font-size: 0.83rem; font-weight: 700;
+  color: var(--texto-claro); cursor: pointer; transition: all 0.15s;
+}
+.pestana-btn:hover, .pestana-btn.activa { border-color: var(--rosa); color: var(--rosa); background: #ffe0f0; }
+
+.divisor { border: none; border-top: 1.5px solid var(--borde); margin: 1.2rem 0; }
+
+.sin-datos { font-size: 0.88rem; color: var(--texto-claro); font-weight: 600; padding: 0.4rem; }
+.texto-subtitulo { color: var(--texto-claro); font-size: 0.9rem; margin: -0.8rem 0 1.2rem; }
+
+/* ── Fondo sidebar overlay ─────────────────── */
+.fondo-sidebar {
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 90;
+}
+.fondo-sidebar.activo { display: block; }
+
+.btn-hamburguesa-panel {
+  display: flex; flex-direction: column; gap: 4px;
+  background: none; border: none; cursor: pointer; padding: 4px;
+}
+.btn-hamburguesa-panel span {
+  display: block; width: 22px; height: 2px;
+  background: var(--texto); border-radius: 2px;
+}
+
+/* ── Responsive ────────────────────────────── */
+@media (max-width: 768px) {
+  .panel-sidebar {
+    position: fixed;
+    left: 0; top: 0;
+    height: 100vh;
+    transform: translateX(-100%);
+    z-index: 100;
+  }
+  .panel-sidebar.abierto { transform: translateX(0); }
+
+  .barra-movil { display: flex; }
+  .panel-seccion { padding: 1.2rem 1rem; }
+  .fila-formulario { grid-template-columns: 1fr; }
+  .barra-stats { flex-direction: column; }
+  .detalle-cabecera { flex-direction: column; }
+  .grilla-cursos { grid-template-columns: 1fr; }
+
+  .cursos-scroll-wrap { max-height: calc(100vh - 240px); }
+
+  .btn-vista-est-flotante span { display: none; } /* solo icono en móvil */
+  .btn-vista-est-flotante { padding: 0.55rem 0.75rem; }
+}
+
+@media (max-width: 768px) {
+  .panel-sidebar {
+    top: 0;
+    height: 100vh;
+    z-index: 250;
+  }
+  .fondo-sidebar { z-index: 240; }
+}
+
+/* Badge contador en nav-btn */
+.badge-sidebar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px; height: 18px;
+  background: rgba(255,255,255,0.25);
+  color: #fff;
+  border-radius: 20px;
+  font-size: 0.65rem;
+  font-weight: 800;
+  padding: 0 4px;
+  margin-left: 0.3rem;
+  line-height: 1;
+  vertical-align: middle;
+}
+.badge-sidebar:empty { display: none; }
+
+#vista-detalle {
+  padding: 0 2.2rem 2rem;
+}

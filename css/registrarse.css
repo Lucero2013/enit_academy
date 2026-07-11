@@ -1,0 +1,362 @@
+/* ══ Página de registro (paginas/registrarse.html) ═══════════════════════════
+   Layout de dos columnas (bienvenida + formulario), selección de rol
+   docente/estudiante, y sus estados de validación. ══════════════════════ */
+/* Variables compartidas: ver css/variables.css. Aquí solo las excepciones propias de esta página
+   (header_footer.css cambia --fondo antes de este archivo; esta página necesita el suyo propio) */
+:root {
+  --fondo: #fff8fc;
+  --sombra: rgba(255, 79, 160, 0.16);
+}
+
+/* ── Base ───────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Nunito', sans-serif;
+  background: var(--fondo);
+  color: var(--texto);
+  min-height: 100vh;
+}
+
+/* ── Layout principal ───────────────────── */
+.seccion-register {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 120px);
+  padding: 2.5rem 1rem;
+}
+
+.register-box {
+  display: flex;
+  width: 100%;
+  max-width: 860px;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 16px 56px var(--sombra);
+  background: var(--blanco);
+}
+
+/* ── Panel izquierdo ────────────────────── */
+.lado-bienvenida {
+  flex: 0 0 38%;
+  background: var(--gradiente);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 3rem 2.2rem;
+  color: var(--blanco);
+  position: relative;
+  overflow: hidden;
+}
+
+.lado-bienvenida::before,
+.lado-bienvenida::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  pointer-events: none;
+}
+.lado-bienvenida::before { width: 220px; height: 220px; top: -70px;  right: -70px; }
+.lado-bienvenida::after  { width: 150px; height: 150px; bottom: -40px; left: -40px; }
+
+.lado-bienvenida h2 {
+  font-family: 'Paytone One', sans-serif;
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  line-height: 1.2;
+}
+
+.lado-bienvenida p {
+  font-size: 0.95rem;
+  line-height: 1.65;
+  opacity: 0.92;
+}
+
+/* ── Panel derecho ──────────────────────── */
+.lado-formulario {
+  flex: 1;
+  padding: 3rem 2.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* ── Títulos de paso ────────────────────── */
+.lado-formulario h3 {
+  font-family: 'Paytone One', sans-serif;
+  font-size: 1.5rem;
+  color: var(--texto);
+  margin-bottom: 0.35rem;
+}
+
+.subtitulo {
+  font-size: 0.88rem;
+  color: var(--texto-claro);
+  margin-bottom: 0.5rem;
+}
+
+/* ── Pasos ──────────────────────────────── */
+.paso-oculto { display: none !important; }
+
+/* ── Tarjetas de rol ────────────────────── */
+.rol-opciones {
+  display: flex;
+  gap: 1.1rem;
+  margin-top: 1.6rem;
+  flex-wrap: wrap;
+}
+
+.rol-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 1.6rem 2rem;
+  border: 2px solid var(--borde);
+  border-radius: 16px;
+  cursor: pointer;
+  background: var(--blanco);
+  min-width: 138px;
+  user-select: none;
+  transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s, background 0.2s;
+}
+
+.rol-card:hover {
+  border-color: var(--rosa);
+  box-shadow: 0 6px 20px var(--sombra);
+  transform: translateY(-3px);
+}
+
+.rol-card.seleccionado {
+  border-color: var(--rosa);
+  background: var(--rosa-suave);
+  box-shadow: 0 6px 20px var(--sombra);
+}
+
+.rol-card i {
+  font-size: 2.2rem;
+  color: var(--rosa);
+  transition: color 0.2s;
+}
+
+.rol-card.seleccionado i { color: var(--lila); }
+
+.rol-card span {
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+/* ── Botón primario (compartido) ────────── */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.78rem 2rem;
+  background: var(--gradiente);
+  color: var(--blanco);
+  border: none;
+  border-radius: 50px;
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.97rem;
+  font-weight: 800;
+  cursor: pointer;
+  letter-spacing: 0.02em;
+  box-shadow: 0 4px 16px var(--sombra);
+  transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+}
+
+.btn-primary:hover:not(:disabled) {
+  opacity: 0.88;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(139, 92, 246, 0.28);
+}
+
+.btn-primary:disabled {
+  background: #e2d5ee;
+  color: #b8a8cc;
+  box-shadow: none;
+  cursor: not-allowed;
+  transform: none;
+}
+
+#btnContinuar { margin-top: 2rem; }
+
+#btnRegister  { width: 100%; margin-top: 0.4rem; }
+
+/* ── Badge de rol ───────────────────────── */
+.rol-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: var(--rosa-suave);
+  border: 1.5px solid #f5b8d6;
+  border-radius: 50px;
+  padding: 0.3rem 0.9rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--rosa);
+  margin-bottom: 1.2rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.rol-badge:hover { background: #ffd0ea; }
+
+.rol-badge i { font-size: 0.85rem; }
+
+.badge-cambiar {
+  margin-left: 0.25rem;
+  font-size: 0.75rem;
+  color: var(--texto-claro);
+  font-weight: 400;
+}
+
+/* ── Campos del formulario ──────────────── */
+.grupo-input {
+  display: flex;
+  flex-direction: column;
+  gap: 0.32rem;
+  margin-bottom: 0.9rem;
+}
+
+.grupo-input label {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--texto);
+  letter-spacing: 0.01em;
+}
+
+/* Wrapper para input + ojito */
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.grupo-input input {
+  width: 100%;
+  padding: 0.65rem 0.95rem;
+  border: 1.8px solid var(--borde);
+  border-radius: 10px;
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.93rem;
+  color: var(--texto);
+  background: var(--blanco);
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+/* Extra padding-right solo en campos con ojito */
+.campo-password .input-wrapper input {
+  padding-right: 2.7rem;
+}
+
+.grupo-input input::placeholder { color: #cbb8d4; }
+
+.grupo-input input:focus {
+  border-color: var(--rosa);
+  box-shadow: 0 0 0 3px rgba(255, 79, 160, 0.1);
+}
+
+/* ── Botón ojito ────────────────────────── */
+.alternar-clave {
+  /* Reset explícito — sin all:unset para no perder pointer-events */
+  appearance: none;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  box-shadow: none;
+  outline: none;
+  border-radius: 0;
+  font-family: inherit;
+
+  /* Posición: dentro del input, centrado verticalmente */
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+
+  /* Tamaño y estilo */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  color: var(--texto-claro);
+  font-size: 1rem;
+  cursor: pointer;
+  z-index: 2;
+}
+
+.alternar-clave:hover { color: var(--rosa); }
+
+/* ── Mensajes de error inline ───────────── */
+.grupo-input .error {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--error-color);
+  min-height: 1em;
+}
+
+/* ── Alerta general (antes del botón) ───── */
+.form-alerta {
+  display: none;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  margin-bottom: 0.8rem;
+  border: 1.5px solid transparent;
+}
+
+/* .form-alerta.visible ya está definido en login.css (se carga antes en esta página) */
+
+.form-alerta.alerta-error {
+  background: #fff0f5;
+  border-color: #f9b8d4;
+  color: var(--error-color);
+}
+
+.form-alerta.alerta-ok {
+  background: #effaf5;
+  border-color: #a3e6c8;
+  color: var(--ok-color);
+}
+
+.form-alerta i { font-size: 1rem; flex-shrink: 0; }
+
+/* ── Responsive ─────────────────────────── */
+@media (max-width: 640px) {
+  .register-box {
+    flex-direction: column;
+    border-radius: 18px;
+  }
+
+  .lado-bienvenida {
+    flex: none;
+    padding: 2rem 1.6rem;
+    text-align: center;
+  }
+
+  .lado-formulario {
+    padding: 2rem 1.4rem;
+  }
+
+  .rol-opciones { justify-content: center; }
+}
+/* ══ MODO OSCURO ══════════════════════════════ */
+body.dark { background: #0f0f1a !important; color: #e2e8f0 !important; }
+body.dark .registro-caja { background: #1a1a2e !important; border-color: #2d2d4a !important; box-shadow: 0 20px 60px rgba(0,0,0,0.4) !important; }
+body.dark .registro-caja h2 { color: #f0f0ff !important; }
+/* body.dark .campo label ya está definido en login.css (se carga antes en esta página) */
+body.dark .campo input, body.dark .campo select { background: #0f0f1a !important; border-color: #2d2d4a !important; color: #e2e8f0 !important; }
+body.dark .campo input:focus, body.dark .campo select:focus { border-color: #7c3aed !important; box-shadow: 0 0 0 3px rgba(124,58,237,0.18) !important; }
+body.dark .link-login { color: #94a3b8 !important; }
+body.dark .link-login a { color: #c4b5fd !important; }
+html.dark { background: #0f0f1a; }

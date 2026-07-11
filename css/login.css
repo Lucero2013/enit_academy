@@ -1,0 +1,365 @@
+/* ══ Modal de inicio de sesión — paginas/modal_login.html ═══════════════════
+   Fondo semitransparente, caja del modal y botón de cerrar. ═══════════════ */
+
+/* ── Fondo ───────────────────────────────────── */
+.modal-fondo {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(17, 24, 39, 0.7);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 500;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+}
+.modal-fondo.visible { display: flex; }
+
+/* ── Caja ────────────────────────────────────── */
+.modal-caja {
+  background: var(--blanco);
+  border-radius: 24px;
+  width: 100%;
+  max-width: 800px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 24px 64px rgba(139, 92, 246, 0.18),
+              0 4px 16px rgba(0,0,0,0.12);
+  animation: modalEntrar 0.28s cubic-bezier(0.34,1.56,0.64,1);
+}
+
+@keyframes modalEntrar {
+  from { opacity: 0; transform: scale(0.93) translateY(12px); }
+  to   { opacity: 1; transform: scale(1)    translateY(0);    }
+}
+
+/* ── Botón cerrar ────────────────────────────── */
+.cerrar {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  border: 1.5px solid var(--gris-c);
+  background: var(--blanco);
+  font-size: 1.1rem;
+  color: var(--gris);
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  line-height: 1;
+  z-index: 10;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+}
+.cerrar:hover {
+  border-color: var(--rosa);
+  color: var(--rosa);
+  background: #fff0f7;
+}
+
+/* ── Layout interno ──────────────────────────── */
+.login-contenido {
+  display: flex;
+  min-height: 480px;
+}
+
+/* ── Panel izquierdo ─────────────────────────── */
+.login-bienvenida {
+  flex: 0 0 38%;
+  background: linear-gradient(145deg, var(--lila), #6d28d9, #4c1d95);
+  color: var(--blanco);
+  padding: 3rem 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1rem;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Círculo decorativo de fondo */
+.login-bienvenida::before {
+  content: '';
+  position: absolute;
+  width: 220px; height: 220px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.06);
+  top: -60px; right: -60px;
+}
+.login-bienvenida::after {
+  content: '';
+  position: absolute;
+  width: 160px; height: 160px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.05);
+  bottom: -40px; left: -40px;
+}
+
+.login-bienvenida-icono {
+  width: 56px; height: 56px;
+  border-radius: 16px;
+  background: rgba(255,255,255,0.15);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.5rem;
+  color: var(--blanco);
+  margin-bottom: 0.5rem;
+}
+
+.login-bienvenida h2 {
+  font-family: 'Paytone One', sans-serif;
+  font-size: 1.75rem;
+  line-height: 1.2;
+  margin: 0;
+}
+
+.login-bienvenida p {
+  font-size: 0.88rem;
+  line-height: 1.65;
+  opacity: 0.82;
+  margin: 0;
+}
+
+.login-bienvenida-features {
+  list-style: none;
+  margin: 0.5rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+.login-bienvenida-features li {
+  font-size: 0.84rem;
+  opacity: 0.88;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.login-bienvenida-features li i {
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.6rem;
+  flex-shrink: 0;
+}
+
+/* ── Formulario ──────────────────────────────── */
+.login-formulario {
+  flex: 1;
+  padding: 2.8rem 2.2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.login-formulario h3 {
+  font-family: 'Paytone One', sans-serif;
+  font-size: 1.35rem;
+  color: var(--negro);
+  margin-bottom: 1.6rem;
+}
+
+/* ── Campos ──────────────────────────────────── */
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.38rem;
+  margin-bottom: 1.1rem;
+}
+
+.campo label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--negro);
+  letter-spacing: 0.01em;
+}
+
+.envoltorio-input {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+/* Icono izquierdo dentro del input */
+.campo-icono {
+  position: absolute;
+  left: 0.9rem;
+  color: var(--gris);
+  font-size: 0.85rem;
+  pointer-events: none;
+  transition: color 0.2s;
+}
+
+.campo input {
+  width: 100%;
+  padding: 0.68rem 0.9rem 0.68rem 2.5rem; /* espacio para icono izq */
+  border: 1.8px solid var(--gris-c);
+  border-radius: 12px;
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.91rem;
+  color: var(--negro);
+  background: var(--fondo);
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+  box-sizing: border-box;
+}
+
+.campo input::placeholder { color: var(--gris); opacity: 0.7; }
+
+.campo input:focus {
+  border-color: var(--lila);
+  background: var(--blanco);
+  box-shadow: 0 0 0 3.5px rgba(139, 92, 246, 0.12);
+}
+
+/* Cuando el campo tiene foco, el icono cambia de color */
+.campo:focus-within .campo-icono { color: var(--lila); }
+
+/* Ojo de contraseña — el padding-right base ya está en header_footer.css */
+
+.ojo-clave {
+  position: absolute;
+  right: 0.9rem;
+  color: var(--gris);
+  font-size: 0.88rem;
+  cursor: pointer;
+  transition: color 0.15s;
+  user-select: none;
+}
+.ojo-clave:hover { color: var(--lila); }
+
+/* ── Opciones (olvidé contraseña) ────────────── */
+.opciones-login {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-bottom: 1.2rem;
+  font-size: 0.81rem;
+}
+
+.opciones-login a {
+  color: var(--lila);
+  font-weight: 700;
+  text-decoration: none;
+  transition: color 0.15s;
+}
+.opciones-login a:hover { color: var(--rosa); text-decoration: underline; }
+
+/* ── Alerta ───────────────────────────────────── */
+.form-alerta {
+  display: none;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.65rem 0.95rem;
+  border-radius: 10px;
+  font-size: 0.84rem;
+  font-weight: 700;
+  border: 1.5px solid transparent;
+  margin-bottom: 0.8rem;
+}
+/* .form-alerta.visible ya está definido en header_footer.css */
+.alerta-error { background: #fff0f5; border-color: #f9b8d4; color: #c0185a; }
+.alerta-ok    { background: #effaf5; border-color: #a3e6c8; color: #1a9a6b; }
+
+/* ── Botón principal ─────────────────────────── */
+.btn-ingresar-form {
+  width: 100%;
+  padding: 0.82rem;
+  background: linear-gradient(135deg, var(--rosa), var(--lila));
+  color: var(--blanco);
+  border: none;
+  border-radius: 50px;
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.97rem;
+  font-weight: 800;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  box-shadow: 0 4px 18px rgba(255, 79, 160, 0.28);
+  transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+  letter-spacing: 0.01em;
+}
+.btn-ingresar-form:hover:not(:disabled) {
+  opacity: 0.9;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 22px rgba(255, 79, 160, 0.38);
+}
+.btn-ingresar-form:active:not(:disabled) { transform: translateY(0); }
+.btn-ingresar-form:disabled {
+  background: var(--gris-c);
+  color: var(--gris);
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* ── Link registro ───────────────────────────── */
+.link-registro {
+  text-align: center;
+  font-size: 0.83rem;
+  margin-top: 1.1rem;
+  color: var(--gris);
+}
+.link-registro a {
+  color: var(--rosa);
+  font-weight: 700;
+  text-decoration: none;
+  transition: color 0.15s;
+}
+.link-registro a:hover { color: var(--lila); text-decoration: underline; }
+
+/* ══════════════════════════════════════════════
+   RESPONSIVE
+   ══════════════════════════════════════════════ */
+
+/* Tablet: ocultar panel izquierdo */
+@media (max-width: 640px) {
+  .login-bienvenida { display: none; }
+
+  .modal-caja { border-radius: 20px; }
+
+  .login-formulario {
+    padding: 2.2rem 1.5rem;
+  }
+}
+
+/* Móvil pequeño */
+@media (max-width: 420px) {
+  .modal-fondo { padding: 0; align-items: flex-end; }
+
+  .modal-caja {
+    border-radius: 20px 20px 0 0;
+    max-width: 100%;
+    animation: modalSlideUp 0.3s cubic-bezier(0.4,0,0.2,1);
+  }
+
+  @keyframes modalSlideUp {
+    from { transform: translateY(100%); opacity: 0; }
+    to   { transform: translateY(0);   opacity: 1; }
+  }
+
+  .login-formulario { padding: 1.8rem 1.2rem 2.2rem; }
+
+  .login-formulario h3 { font-size: 1.2rem; margin-bottom: 1.2rem; }
+}
+
+body.dark .login-formulario,
+body.dark .campo input,
+body.dark .cerrar{
+    background-color: rgb(15, 12, 48);
+}
+
+
+/* ══ MODO OSCURO — Login/Reset páginas ════════ */
+body.dark { background: #0f0f1a !important; color: #e2e8f0 !important; }
+body.dark .login-page-wrap { background: #0f0f1a !important; }
+body.dark .login-caja { background: #1a1a2e !important; border-color: #2d2d4a !important; box-shadow: 0 20px 60px rgba(0,0,0,0.5) !important; }
+body.dark .login-caja h2, body.dark .login-formulario h3 { color: #f0f0ff !important; }
+body.dark .campo label { color: #c4b5fd !important; }
+body.dark .campo input { background: #0f0f1a !important; border-color: #2d2d4a !important; color: #e2e8f0 !important; }
+body.dark .campo input:focus { border-color: #7c3aed !important; box-shadow: 0 0 0 3px rgba(124,58,237,0.18) !important; }
+body.dark .cerrar { background: #1a1a2e !important; color: #94a3b8 !important; }
+body.dark .link-registro, body.dark .opciones-login { color: #94a3b8 !important; }
+body.dark .modal-caja { background: #1a1a2e !important; }
+html.dark { background: #0f0f1a; }

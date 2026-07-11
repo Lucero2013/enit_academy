@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<!-- ══ Variante del flujo de nueva contraseña con vistas de formulario / éxito / enlace inválido en una sola página (vista-formulario, vista-exito, vista-invalida). Script inline propio, no usa un .js externo. ══ -->
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nueva contraseña — ENIT Academy</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --rosa:      #ff4fa0;
+      --lila:      #8b5cf6;
+      --amarillo:  #ffd84d;
+      --fondo:     #fff8fc;
+      --blanco:    #fff;
+      --borde:     #f0d6e8;
+      --gradiente: linear-gradient(135deg, var(--rosa), var(--lila));
+      --sombra:    rgba(255, 79, 160, 0.12);
+      --texto:     #1a1a2e;
+      --muted:     #888;
+      --error:     #e53e3e;
+      --success:   #38a169;
+      --radius:    12px;
+    }
+
+    html, body {
+      min-height: 100dvh;
+      background: var(--fondo);
+      color: var(--texto);
+      font-family: 'Inter', system-ui, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .card {
+      background: var(--blanco);
+      border: 1px solid var(--borde);
+      border-radius: 20px;
+      padding: 48px 40px 40px;
+      width: 100%;
+      max-width: 420px;
+      margin: 24px;
+      text-align: center;
+      box-shadow: 0 8px 32px var(--sombra);
+    }
+
+    .logo {
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      background: var(--gradiente);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-transform: uppercase;
+      margin-bottom: 32px;
+    }
+
+    .icon-wrap {
+      width: 64px; height: 64px;
+      margin: 0 auto 20px;
+      background: linear-gradient(135deg, rgba(255,79,160,0.12), rgba(139,92,246,0.12));
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .icon-wrap svg { width: 28px; height: 28px; stroke: var(--rosa); }
+
+    h1 { font-size: 1.35rem; font-weight: 700; margin-bottom: 8px; color: var(--texto); }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.6;
+      margin-bottom: 32px;
+    }
+
+    .input-wrap {
+      text-align: left;
+      margin-bottom: 16px;
+      position: relative;
+    }
+    .input-wrap label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--texto);
+      margin-bottom: 6px;
+    }
+    .input-wrap input {
+      width: 100%;
+      padding: 13px 44px 13px 16px;
+      background: var(--fondo);
+      border: 1.5px solid var(--borde);
+      border-radius: var(--radius);
+      color: var(--texto);
+      font-size: 0.95rem;
+      font-family: 'Inter', sans-serif;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .input-wrap input:focus {
+      border-color: var(--rosa);
+      box-shadow: 0 0 0 3px rgba(255,79,160,0.12);
+      background: var(--blanco);
+    }
+    .input-wrap input.error-state {
+      border-color: var(--error);
+      box-shadow: 0 0 0 3px rgba(229,62,62,0.1);
+    }
+
+    .toggle-eye {
+      position: absolute;
+      right: 14px;
+      bottom: 13px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      color: var(--muted);
+      transition: color 0.2s;
+      display: flex;
+    }
+    .toggle-eye:hover { color: var(--rosa); }
+    .toggle-eye svg { width: 18px; height: 18px; stroke: currentColor; }
+
+    .strength-bar {
+      display: flex;
+      gap: 4px;
+      margin-top: 8px;
+    }
+    .strength-bar span {
+      flex: 1;
+      height: 3px;
+      border-radius: 2px;
+      background: var(--borde);
+      transition: background 0.3s;
+    }
+    .strength-bar span.active-1 { background: var(--error); }
+    .strength-bar span.active-2 { background: #dd8800; }
+    .strength-bar span.active-3 { background: var(--success); }
+
+    .retroalimentacion {
+      height: 22px;
+      font-size: 0.82rem;
+      margin-bottom: 16px;
+      text-align: left;
+    }
+    .retroalimentacion.error   { color: var(--error); }
+    .retroalimentacion.success { color: var(--success); }
+
+    .btn {
+      width: 100%;
+      padding: 15px;
+      background: var(--gradiente);
+      border: none;
+      border-radius: var(--radius);
+      color: #fff;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      transition: opacity 0.2s, transform 0.1s;
+      display: flex; align-items: center; justify-content: center;
+      gap: 8px;
+    }
+    .btn:hover:not(:disabled) { opacity: 0.88; }
+    .btn:active:not(:disabled) { transform: scale(0.98); }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .cargando {
+      width: 18px; height: 18px;
+      border: 2.5px solid rgba(255,255,255,0.35);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      display: none;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .btn.loading .cargando   { display: block; }
+    .btn.loading .btn-label { display: none; }
+
+    .capa-exito {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 0 4px;
+    }
+    .circulo-check {
+      width: 64px; height: 64px;
+      background: rgba(56,161,105,0.12);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .circulo-check svg {
+      width: 30px; height: 30px;
+      stroke: var(--success);
+      stroke-dasharray: 40;
+      stroke-dashoffset: 40;
+      animation: draw 0.5s ease forwards 0.1s;
+    }
+    @keyframes draw { to { stroke-dashoffset: 0; } }
+    .capa-exito p     { color: var(--success); font-weight: 600; font-size: 1rem; }
+    .capa-exito small { color: var(--muted); font-size: 0.82rem; }
+
+    .invalid-overlay {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 0 4px;
+    }
+    .x-circle {
+      width: 64px; height: 64px;
+      background: rgba(229,62,62,0.1);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .x-circle svg { width: 28px; height: 28px; stroke: var(--error); }
+    .invalid-overlay p     { color: var(--error); font-weight: 600; font-size: 1rem; }
+    .invalid-overlay small { color: var(--muted); font-size: 0.82rem; }
+    .invalid-overlay a {
+      margin-top: 4px;
+      color: var(--rosa);
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    @media (max-width: 400px) {
+      .card { padding: 36px 20px 28px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <div class="logo">ENIT Academy</div>
+
+  <div id="vista-formulario">
+    <div class="icon-wrap">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+      </svg>
+    </div>
+
+    <h1>Nueva contraseña</h1>
+    <p class="subtitle">Elige una contraseña segura para tu cuenta.</p>
+
+    <div class="input-wrap">
+      <label for="password">Nueva contraseña</label>
+      <input type="password" id="password" placeholder="Mínimo 8 caracteres" autocomplete="new-password" />
+      <button class="toggle-eye" id="toggle1" type="button" aria-label="Mostrar contraseña">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+          <circle cx="12" cy="12" r="3"/>
+        </svg>
+      </button>
+      <div class="strength-bar">
+        <span id="s1"></span><span id="s2"></span><span id="s3"></span>
+      </div>
+    </div>
+
+    <div class="input-wrap">
+      <label for="confirm">Confirmar contraseña</label>
+      <input type="password" id="confirm" placeholder="Repite la contraseña" autocomplete="new-password" />
+      <button class="toggle-eye" id="toggle2" type="button" aria-label="Mostrar confirmación">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+          <circle cx="12" cy="12" r="3"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="retroalimentacion" id="retroalimentacion"></div>
+
+    <button class="btn" id="btn-save" disabled>
+      <span class="cargando"></span>
+      <span class="btn-label">Guardar contraseña</span>
+    </button>
+  </div>
+
+  <div class="capa-exito" id="vista-exito">
+    <div class="circulo-check">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="20 6 9 17 4 12"/>
+      </svg>
+    </div>
+    <p>¡Contraseña actualizada!</p>
+    <small>Redirigiendo al inicio de sesión…</small>
+  </div>
+
+  <div class="invalid-overlay" id="vista-invalida">
+    <div class="x-circle">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </div>
+    <p>Enlace inválido o expirado</p>
+    <small>El enlace de recuperación ya no es válido.</small>
+    <a href="/paginas/solicitar-reset.html">Solicitar uno nuevo</a>
+  </div>
+</div>
+
+<script type="module">
+  import { supabase } from '../js/supabase.js';
+
+  const passwordInput = document.getElementById('password');
+  const confirmInput  = document.getElementById('confirm');
+  const btnSave       = document.getElementById('btn-save');
+  const feedbackEl    = document.getElementById('retroalimentacion');
+  const formView      = document.getElementById('vista-formulario');
+  const successView   = document.getElementById('vista-exito');
+  const invalidView   = document.getElementById('vista-invalida');
+  const bars          = [document.getElementById('s1'), document.getElementById('s2'), document.getElementById('s3')];
+
+  supabase.auth.onAuthStateChange((event) => {
+    if (event === 'PASSWORD_RECOVERY') { /* sesión válida */ }
+  });
+
+  setTimeout(() => {
+    const hash = new URLSearchParams(window.location.hash.slice(1));
+    if (!hash.get('access_token')) {
+      supabase.auth.getSession().then(({ data }) => {
+        if (!data.session) {
+          formView.style.display = 'none';
+          invalidView.style.display = 'flex';
+        }
+      });
+    }
+  }, 800);
+
+  function makeToggle(btnId, inputEl) {
+    document.getElementById(btnId).addEventListener('click', () => {
+      inputEl.type = inputEl.type === 'password' ? 'text' : 'password';
+    });
+  }
+  makeToggle('toggle1', passwordInput);
+  makeToggle('toggle2', confirmInput);
+
+  function strength(pw) {
+    let score = 0;
+    if (pw.length >= 8) score++;
+    if (/[A-Z]/.test(pw) && /[0-9]/.test(pw)) score++;
+    if (/[^A-Za-z0-9]/.test(pw)) score++;
+    return score;
+  }
+
+  function updateStrength() {
+    const sc = strength(passwordInput.value);
+    bars.forEach((b, i) => { b.className = i < sc ? `active-${sc}` : ''; });
+  }
+
+  function validate() {
+    return passwordInput.value.length >= 8 && passwordInput.value === confirmInput.value;
+  }
+
+  function setError(msg) { feedbackEl.textContent = msg; feedbackEl.className = 'retroalimentacion error'; }
+  function clearFeedback() { feedbackEl.textContent = ''; feedbackEl.className = 'retroalimentacion'; }
+  function setLoading(on) {
+    btnSave.classList.toggle('loading', on);
+    btnSave.disabled = on;
+    passwordInput.disabled = on;
+    confirmInput.disabled = on;
+  }
+
+  passwordInput.addEventListener('input', () => { updateStrength(); btnSave.disabled = !validate(); clearFeedback(); });
+  confirmInput.addEventListener('input',  () => { btnSave.disabled = !validate(); clearFeedback(); });
+
+  btnSave.addEventListener('click', async () => {
+    clearFeedback();
+    const pw = passwordInput.value;
+    if (pw.length < 8)                   { setError('La contraseña debe tener al menos 8 caracteres.'); return; }
+    if (pw !== confirmInput.value)       { setError('Las contraseñas no coinciden.'); return; }
+
+    setLoading(true);
+    const { error } = await supabase.auth.updateUser({ password: pw });
+    setLoading(false);
+
+    if (error) { setError('No se pudo actualizar. El enlace puede haber expirado.'); return; }
+
+    formView.style.display = 'none';
+    successView.style.display = 'flex';
+    setTimeout(() => window.location.href = '/paginas/iniciar-sesion.html', 2200);
+  });
+</script>
+<script type="module" src="/js/login.js"></script>
+</body>
+</html>

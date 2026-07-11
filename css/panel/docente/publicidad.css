@@ -1,0 +1,37 @@
+/* ══ Panel Docente — Publicidad ══ */
+.publicidad-layout {
+  display: grid;
+  grid-template-columns: minmax(320px, 480px) 1fr;
+  gap: 1.8rem;
+  align-items: start;
+  width: 100%;
+}
+ 
+.publicidad-form-col {
+  background: var(--blanco);
+  border: 1.5px solid var(--borde);
+  border-radius: 20px;
+  padding: 1.8rem 1.6rem;
+  box-shadow: 0 4px 18px var(--sombra);
+}
+ 
+.publicidad-preview-col {
+  background: var(--blanco);
+  border: 1.5px solid var(--borde);
+  border-radius: 20px;
+  padding: 1.8rem 1.6rem;
+  box-shadow: 0 4px 18px var(--sombra);
+  min-height: 200px;
+}
+ 
+@media (max-width: 860px) {
+  .publicidad-layout {
+    grid-template-columns: 1fr;
+  }
+}
+ 
+body.dark .publicidad-form-col,
+body.dark .publicidad-preview-col {
+  background: #1a1a2e !important;
+  border-color: #2d2d4a !important;
+}
