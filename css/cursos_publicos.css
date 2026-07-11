@@ -1,0 +1,152 @@
+/* ══ Catálogo de cursos públicos (sección/página de cursos visibles sin
+   iniciar sesión) ═══════════════════════════════════════════════════════ */
+.seccion-cursos-publicos {
+  padding: 40px ;
+  max-width: 1400px;
+  margin: 0 auto;
+  text-align: center;
+}
+.titulo-seccion-pub {
+  font-family: 'Paytone One', sans-serif;
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  color: var(--texto);
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.35rem;
+  
+}
+
+
+.titulo-seccion-pub i {
+  background: linear-gradient(135deg, #1aaa6b, #8b5cf6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+
+}
+
+.subtitulo-seccion-pub {
+  font-size: 0.92rem;
+  color: var(--texto-claro);
+  margin-bottom: 1.8rem;
+  
+}
+.grid-cursos-pub {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1.2rem;
+  
+}
+.cargando-pub, .sin-cursos-pub {
+  font-size: 0.9rem;
+  color: var(--texto-claro);
+  grid-column: 1/-1;
+  text-align: center;
+  padding: 2rem 0;
+}
+.tarjeta-pub {
+  background: var(--blanco);
+  border: 1.5px solid var(--borde);
+  border-radius: 18px;
+  padding: 1.3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  box-shadow: 0 4px 16px rgba(139,92,246,0.07);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.tarjeta-pub:hover { transform: translateY(-3px); box-shadow: 0 8px 26px rgba(139,92,246,0.12); }
+.tarjeta-pub-top {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  min-height: 26px;
+}
+.tarjeta-pub-titulo { font-size: 1rem; font-weight: 800; color: var(--texto); }
+.tarjeta-pub-desc {
+  font-size: 0.84rem;
+  color: var(--texto-claro);
+  line-height: 1.55;
+  flex: 1;
+}
+.tarjeta-pub-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-top: 0.4rem;
+}
+.pub-docente {
+  font-size: 0.78rem;
+  color: var(--texto-claro);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+.btn-inscribirse {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.45rem 1.1rem;
+  background: linear-gradient(135deg, #ff4fa0, #8b5cf6);
+  color: #fff;
+  border: none;
+  border-radius: 50px;
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.83rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.15s;
+  white-space: nowrap;
+}
+.btn-inscribirse:hover { opacity: 0.85; transform: translateY(-1px); }
+ 
+/* Badge de visibilidad (también necesario en panel.css si no está) */
+.badge-visibilidad {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.18rem 0.65rem;
+  border-radius: 20px;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+.badge-visibilidad.publico { background: #e0f7ef; color: #1aaa6b; }
+.badge-visibilidad.privado { background: #ede9fe; color: #7c3aed; }
+ 
+/* Toast */
+.enit-toast {
+  position: fixed;
+  bottom: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%) translateY(120%);
+  background: var(--blanco);
+  border: 1.5px solid var(--borde);
+  border-radius: 50px;
+  padding: 0.7rem 1.4rem;
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.12);
+  z-index: 9999;
+  transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
+  white-space: nowrap;
+}
+.enit-toast.toast-visible  { transform: translateX(-50%) translateY(0); }
+.enit-toast.toast-ok       { border-color: #a3e6c8; color: #1aaa6b; }
+.enit-toast.toast-error    { border-color: #f9b8d4; color: #d6185a; }
+.enit-toast.toast-info     { border-color: #d4c4fb; color: #7c3aed; }
+
+/* ══ MODO OSCURO ══════════════════════════════ */
+body.dark { background: #0f0f1a !important; color: #e2e8f0 !important; }
+body.dark .cursos-pub-titulo { color: #f0f0ff !important; }
+body.dark .tarjeta-pub { background: #1a1a2e !important; border-color: #2d2d4a !important; }
+body.dark .tarjeta-pub-titulo { color: #f0f0ff !important; }
+body.dark .tarjeta-pub-desc { color: #94a3b8 !important; }
+body.dark .tarjeta-pub-footer { border-color: #2d2d4a !important; color: #64748b !important; }
+html.dark { background: #0f0f1a; }

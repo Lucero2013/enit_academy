@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<!-- ══ Panel del docente. Sidebar + vistas internas (vista-cursos, vista-detalle, vista-estudiantes, vista-publicidad, vista-perfil, vista-crear) que se muestran/ocultan sin recargar la página. Usa js/panel_docente.js (orquestador) + js/docente/*. ══ -->
+<html lang="es" data-bs-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ENIT Academy — Panel Docente</title>
+  <script>const dm=localStorage.getItem("modoOscuro")==="true";if(dm){document.documentElement.setAttribute("data-bs-theme","dark");document.documentElement.classList.add("dark");}</script>
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Paytone+One&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/variables.css">
+  <link rel="stylesheet" href="../css/header_footer.css">
+  <link rel="stylesheet" href="../css/panel/base.css">
+  <link rel="stylesheet" href="../css/panel/tarjetas.css">
+  <link rel="stylesheet" href="../css/panel/formularios.css">
+  <link rel="stylesheet" href="../css/panel/botones.css">
+  <link rel="stylesheet" href="../css/panel/modales.css">
+  <link rel="stylesheet" href="../css/panel/perfil.css">
+  <link rel="stylesheet" href="../css/panel/modo-oscuro.css">
+  <link rel="stylesheet" href="../css/panel/docente/entregas.css">
+  <link rel="stylesheet" href="../css/panel/docente/publicidad.css">
+
+</head>
+<body>
+  <div id="header"></div>
+  <div id="fondoSidebar" class="fondo-sidebar"></div>
+
+  <main class="panel-contenedor">
+    <!-- SIDEBAR -->
+    <aside class="panel-sidebar">
+      <!-- Brillo decorativo -->
+      <div class="sidebar-brillo"></div>
+
+      <!-- PERFIL: solo nombre + rol, más grande y limpio -->
+      <div class="perfil-sidebar">
+        <div class="perfil-sidebar-inner">
+          <div class="avatar-sidebar">
+            <i class="fa-solid fa-chalkboard-teacher"></i>
+          </div>
+          <div class="perfil-sidebar-textos">
+            <p class="nombre-sidebar" id="sideNombre">Cargando...</p>
+            <span class="rol-sidebar"><i class="fa-solid fa-star"></i> Docente</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="sidebar-divisor"></div>
+
+      <!-- NAV: Perfil → Cursos → Estudiantes -->
+      <nav class="nav-sidebar">
+        <button class="nav-btn" data-vista="perfil">
+          <span class="nav-btn-icono"><i class="fa-solid fa-user-pen"></i></span>
+          <span class="nav-btn-texto">Mi perfil</span>
+        </button>
+        <button class="nav-btn activo" data-vista="cursos">
+          <span class="nav-btn-icono"><i class="fa-solid fa-book-open"></i></span>
+          <span class="nav-btn-texto">Mis cursos</span>
+        </button>
+        <button class="nav-btn" data-vista="publicidad">
+        <span class="nav-btn-icono"><i class="fa-solid fa-bullhorn"></i></span>
+        <span class="nav-btn-texto">Publicidad</span>
+      </button>
+        <button class="nav-btn" data-vista="estudiantes">
+          <span class="nav-btn-icono"><i class="fa-solid fa-users"></i></span>
+          <span class="nav-btn-texto">Estudiantes</span>
+        </button>
+      </nav>
+
+      <!-- Footer sidebar: Vista Estudiante -->
+      <div class="sidebar-footer">
+        <div class="sidebar-divisor"></div>
+        <button class="btn-vista-sidebar" id="btnVistaEstudianteSidebar">
+          <span class="nav-btn-icono"><i class="fa-solid fa-graduation-cap"></i></span>
+          <span>Vista Estudiante</span>
+        </button>
+      </div>
+    </aside>
+
+
+ 
+
+    <div class="panel-cuerpo">
+      <!-- BARRA MÓVIL -->
+      <div class="barra-movil">
+        <button id="btnAbrirSidebar" class="btn-hamburguesa-panel"><span></span><span></span><span></span></button>
+        <span class="titulo-panel">Panel Docente</span>
+      </div>
+
+      <section class="panel-seccion">
+        <!-- SALUDO -->
+        <div class="saludo-hero">
+          <div class="saludo-texto">
+            <h2 id="saludoH2">¡Hola, <span>Docente</span>! 👋</h2>
+            <p id="saludoFrase">Bienvenido a tu panel docente.</p>
+          </div>
+          <div class="saludo-reloj">
+            <div class="reloj-hora" id="relojHora">00:00:00</div>
+            <div class="reloj-fecha" id="relojFecha"></div>
+          </div>
+        </div>
+
+        <!-- ═══ Vista: publicidad ═══ -->
+<!-- vista manejada por: js/docente/publicidad_docente.js -->
+<div id="vista-publicidad" class="vista oculto">
+  <div class="vista-cabecera">
+    <h2>Mi publicidad</h2>
+  </div>
+  <p class="modulos-ayuda" style="margin-bottom:1.2rem;">
+    Sube hasta 2 banners para promocionar tus cursos. Se mostrarán rotando en el anuncio
+    emergente que ven quienes visitan la página principal.
+  </p>
+ 
+  <div class="publicidad-layout">
+ 
+    <!-- Columna: formulario -->
+    <div class="publicidad-form-col">
+      <div id="avisoLimitePublicidad" class="nota-combinable" style="display:none; margin-bottom:1rem;">
+        <i class="fa-solid fa-circle-info"></i>
+        Ya tienes el máximo de 2 publicidades. Elimina una de la lista para poder agregar otra, o edítala directamente.
+      </div>
+      <form id="formPublicidad" class="formulario" style="max-width:none;" novalidate>
+        <div class="campo">
+          <label for="pubTitulo">Título</label>
+          <input type="text" id="pubTitulo" placeholder="Ej: ¡Oferta especial!">
+          <small class="error" id="errPubTitulo"></small>
+        </div>
+        <div class="campo">
+          <label for="pubContenido">Mensaje</label>
+          <textarea id="pubContenido" rows="3" placeholder="Describe tu promoción..."></textarea>
+        </div>
+        <div class="campo">
+          <label for="pubLink">Enlace al hacer clic <span class="nota-opt">(opcional)</span></label>
+          <input type="text" id="pubLink" placeholder="Ej: #cursos">
+        </div>
+        <div class="campo">
+          <label>Imagen del banner</label>
+          <div class="drop-imagen" id="dropImagenPub">
+            <i class="fa-solid fa-image"></i>
+            <span>Arrastra una imagen o <label for="pubImagen" style="color:var(--rosa);cursor:pointer;text-decoration:underline;">selecciona</label></span>
+            <input type="file" id="pubImagen" accept="image/*" style="display:none;">
+          </div>
+          <div id="prevImagenPub" style="display:none;margin-top:.6rem;">
+            <img id="imgPreviewPub" src="" alt="Preview" style="width:100%;max-height:160px;object-fit:cover;border-radius:10px;">
+            <button type="button" id="btnQuitarImgPub" class="btn-texto-rosa mt-1"><i class="fa-solid fa-xmark"></i> Quitar imagen</button>
+          </div>
+          <small class="error" id="errPubImagen"></small>
+        </div>
+        <div id="alertaPublicidad" class="alerta"></div>
+        <div class="perfil-form-footer" style="justify-content:space-between;">
+          <button type="button" id="btnCancelarEdicionPub" class="btn-secundario">
+            Cancelar
+          </button>
+          <button type="submit" class="btn-primario">
+            <i class="fa-solid fa-bullhorn"></i> Publicar
+          </button>
+        </div>
+      </form>
+    </div>
+ 
+    <!-- Columna: lista de publicidades activas (hasta 2) -->
+    <div class="publicidad-preview-col">
+      <h3 class="perfil-seccion-sub" style="margin-bottom:.8rem;"><i class="fa-solid fa-eye"></i> Tus publicidades (<span id="contadorPublicidades">0</span>/2)</h3>
+      <div id="previewPublicidadActiva">
+        <p class="sin-datos">Aún no tienes publicidad activa.</p>
+      </div>
+    </div>
+ 
+  </div>
+</div>
+ 
+
+        <!-- ═══ Vista: mis cursos ═══ -->
+        <!-- vista manejada por: js/docente/cursos_docente.js -->
+<div id="vista-cursos" class="vista">
+          <div class="vista-cabecera">
+            <h2>Mis cursos</h2>
+            <button class="btn-primario btn-pequeno" onclick="abrirModalCrearCurso()">
+              <i class="fa-solid fa-plus"></i> Nuevo curso
+            </button>
+          </div>
+          <!-- Contenedor con scroll propio para que el aside no se mueva -->
+          <div class="cursos-scroll-wrap">
+            <div id="listaCursos" class="grilla-cursos">
+              <p class="sin-datos" id="msgSinCursos">Aún no has creado ningún curso.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- ═══ Vista: detalle ═══ -->
+        <!-- vista manejada por: js/docente/cursos_docente.js + modulos_docente.js + anuncios_docente.js + estudiantes_docente.js + entregas_docente.js (pestañas del detalle de curso) -->
+<div id="vista-detalle" class="vista oculto">
+          <button class="btn-volver" id="btnVolverCursos"><i class="fa-solid fa-arrow-left"></i> Volver</button>
+
+          <!-- HERO DEL CURSO (editable) -->
+          <div class="curso-hero" id="cursoHero">
+            <div class="curso-hero-fondo" id="cursoHeroFondo"></div>
+            <div class="curso-hero-velo"></div>
+            <div class="curso-hero-acciones">
+              <button class="btn-accion-hero" id="btnCambiarVisibilidad" title="Hacer público">
+                <i class="fa-solid fa-eye-slash"></i>
+              </button>
+              <button class="btn-accion-hero" id="btnEditarHero" title="Editar curso">
+                <i class="fa-solid fa-pen"></i>
+              </button>
+              <button class="btn-accion-hero btn-accion-hero-peligro" id="btnEliminarCurso" title="Eliminar curso">
+                <i class="fa-solid fa-trash"></i>
+              </button>
+            </div>
+            <div class="curso-hero-contenido">
+              <div class="curso-hero-badges">
+                <span id="cursoNivel" class="etiqueta-nivel"></span>
+                <span id="cursoVisibilidad" class="badge-visibilidad privado"><i class="fa-solid fa-lock"></i> Con código</span>
+              </div>
+              <h2 id="cursoTitulo"></h2>
+              <p id="cursoDesc" class="texto-descripcion-hero"></p>
+            </div>
+            <div class="caja-codigo caja-codigo-hero">
+              <p>Código del curso</p>
+              <strong id="cursoCodigo"></strong>
+              <button id="btnCopiarCodigo" class="btn-icono" title="Copiar"><i class="fa-regular fa-copy"></i></button>
+            </div>
+          </div>
+
+
+          <!-- Pestañas -->
+          <div class="pestanas-nav">
+            <button class="pestana-btn activa" data-pestana="modulos"><i class="fa-solid fa-layer-group"></i> Módulos</button>
+            <button class="pestana-btn" data-pestana="alumnos"><i class="fa-solid fa-users"></i> Alumnos</button>
+<button class="pestana-btn" data-pestana="anuncios"><i class="fa-solid fa-bullhorn"></i> Anuncios</button>
+<button class="pestana-btn" data-pestana="entregas"><i class="fa-solid fa-inbox"></i> Entregas</button>
+</div>
+
+          <!-- ── Panel: MÓDULOS ── -->
+          <div class="pestana-panel" data-panel="modulos">
+            <div class="modulos-cabecera">
+              <p class="modulos-ayuda">Organiza el contenido del curso en módulos. Cada módulo puede tener texto, archivos y tareas.</p>
+              <button class="btn-primario btn-pequeno" id="btnNuevoModulo">
+                <i class="fa-solid fa-plus"></i> Nuevo módulo
+              </button>
+            </div>
+            <div id="listaModulosCurso" class="lista-modulos"></div>
+          </div>
+
+          <div class="pestana-panel oculto" data-panel="alumnos">
+            <div id="listaAlumnosCurso" class="lista-alumnos"></div>
+          </div>
+          <div class="pestana-panel oculto" data-panel="anuncios">
+            <div class="formulario-inline">
+              <h3>Publicar anuncio</h3>
+              <div class="campo"><label>Título</label><input type="text" id="anuncioTitulo" placeholder="Título del anuncio"></div>
+              <div class="campo"><label>Contenido</label><textarea id="anuncioContenido" rows="3" placeholder="Escribe el mensaje..."></textarea></div>
+              <div id="alertaAnuncio" class="alerta"></div>
+              <button id="btnPublicarAnuncio" class="btn-primario"><i class="fa-solid fa-bullhorn"></i> Publicar</button>
+            </div>
+            <div id="listaAnunciosCurso" class="lista-anuncios"></div>
+          </div>
+          <div class="pestana-panel oculto" data-panel="entregas">
+            <div id="listaEntregasCurso">
+              <p class="sin-datos">Selecciona un curso para ver las entregas.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- ═══ Vista: estudiantes ═══ -->
+        <!-- vista manejada por: js/docente/estudiantes_docente.js -->
+<div id="vista-estudiantes" class="vista oculto">
+          <h2>Todos los estudiantes</h2>
+          <input type="text" id="buscarTablaEstudiante" class="buscador" placeholder="Buscar por nombre...">
+          <div id="tablaEstudiantes" class="tabla-estudiantes"></div>
+        </div>
+
+        <!-- ═══ Vista: perfil ═══ -->
+        <!-- vista manejada por: js/docente/perfil_docente.js -->
+<div id="vista-perfil" class="vista oculto">
+          <div class="perfil-layout">
+
+            <!-- Tarjeta identidad -->
+            <div class="perfil-card-identidad">
+              <div class="perfil-avatar-wrap">
+                <div class="avatar-grande"><i class="fa-solid fa-chalkboard-teacher"></i></div>
+              </div>
+              <div class="perfil-identidad-info">
+                <p class="perfil-nombre-display" id="perfilNombreDisplay">—</p>
+                <span class="etiqueta-rol-perfil"><i class="fa-solid fa-chalkboard-teacher"></i> Docente</span>
+                <p class="texto-desde" id="perfilDesde"></p>
+                <p class="perfil-email-display" id="perfilEmailDisplay"></p>
+              </div>
+            </div>
+
+            <!-- Formulario ocupa todo el ancho restante -->
+            <div class="perfil-form-wrap">
+              <form id="formPerfil" class="formulario" novalidate>
+
+                <!-- Grid interior: datos | contraseña -->
+                <div class="perfil-form-grid">
+
+                  <!-- Columna: datos personales -->
+                  <div class="perfil-col">
+                    <h3 class="perfil-seccion-sub"><i class="fa-solid fa-user-pen"></i> Datos personales</h3>
+                    <div class="campo">
+                      <label for="pNombre">Nombre</label>
+                      <input type="text" id="pNombre">
+                      <small class="error" id="errPNombre"></small>
+                    </div>
+                    <div class="campo">
+                      <label for="pApellido">Apellido</label>
+                      <input type="text" id="pApellido">
+                      <small class="error" id="errPApellido"></small>
+                    </div>
+                    <div class="campo">
+                      <label for="pEmail">Correo electrónico</label>
+                      <input type="email" id="pEmail" disabled>
+                      <small class="nota"><i class="fa-solid fa-lock" style="font-size:0.7rem;"></i> El correo no se puede cambiar.</small>
+                    </div>
+                  </div>
+
+                  <!-- Divisor vertical -->
+                  <div class="perfil-divisor-v"></div>
+
+                  <!-- Columna: contraseña -->
+                  <div class="perfil-col">
+                    <h3 class="perfil-seccion-sub"><i class="fa-solid fa-key"></i> Cambiar contraseña</h3>
+                    <div class="campo">
+                      <label for="pClave">Nueva contraseña</label>
+                      <div class="campo-con-ojo">
+                        <input type="password" id="pClave" placeholder="Mínimo 6 caracteres">
+                        <button type="button" class="btn-ojo" data-objetivo="pClave"><i class="fa-regular fa-eye"></i></button>
+                      </div>
+                      <small class="error" id="errPClave"></small>
+                    </div>
+                    <p class="perfil-clave-nota">Deja el campo vacío si no deseas cambiar tu contraseña.</p>
+                  </div>
+
+                </div>
+
+                <div id="alertaPerfil" class="alerta"></div>
+                <div class="perfil-form-footer">
+                  <button type="submit" class="btn-primario">
+                    <i class="fa-solid fa-floppy-disk"></i> Guardar cambios
+                  </button>
+                </div>
+              </form>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- ═══ Vista: crear curso placeholder ═══ -->
+        <!-- vista manejada por: js/docente/cursos_docente.js (initFormCrearCurso) -->
+<div id="vista-crear" class="vista oculto"></div>
+
+      </section>
+    </div>
+  </main>
+
+  <!-- ══════════════════════════════════════════
+       MODAL — Crear nuevo curso
+  ══════════════════════════════════════════════ -->
+  <div id="modalCrearCurso" class="modal-overlay" style="display:none;" aria-modal="true" role="dialog">
+    <div class="modal-caja">
+      <div class="modal-cabecera">
+        <h2><i class="fa-solid fa-plus-circle"></i> Crear nuevo curso</h2>
+        <button class="modal-cerrar" id="btnCerrarModalCurso" aria-label="Cerrar"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="modal-cuerpo">
+        <form id="formCrearCurso" class="formulario" novalidate>
+          <div class="row g-3">
+            <div class="col-sm-8">
+              <div class="campo">
+                <label for="cNombre">Nombre del curso</label>
+                <input type="text" id="cNombre" placeholder="Ej: Inglés básico A1">
+                <small class="error" id="errCNombre"></small>
+              </div>
+            </div>
+            <div class="col-sm-4">
+              <div class="campo">
+                <label for="cNivel">Nivel</label>
+                <select id="cNivel">
+                  <option value="">— Selecciona —</option>
+                  <option value="basico">Básico</option>
+                  <option value="intermedio">Intermedio</option>
+                  <option value="avanzado">Avanzado</option>
+                </select>
+                <small class="error" id="errCNivel"></small>
+              </div>
+            </div>
+          </div>
+          <div class="campo">
+            <label for="cDesc">Descripción</label>
+            <textarea id="cDesc" rows="2" placeholder="¿De qué trata el curso?"></textarea>
+          </div>
+          <div class="campo">
+            <label>Imagen del curso <span class="nota-opt">(opcional)</span></label>
+            <div class="drop-imagen" id="dropImagen">
+              <i class="fa-solid fa-image"></i>
+              <span>Arrastra una imagen o <label for="cImagen" style="color:var(--rosa);cursor:pointer;text-decoration:underline;">selecciona</label></span>
+              <input type="file" id="cImagen" accept="image/*" style="display:none;">
+            </div>
+            <div id="prevImagen" style="display:none;margin-top:.6rem;">
+              <img id="imgPreview" src="" alt="Preview" style="width:100%;max-height:160px;object-fit:cover;border-radius:10px;">
+              <button type="button" id="btnQuitarImg" class="btn-texto-rosa mt-1"><i class="fa-solid fa-xmark"></i> Quitar imagen</button>
+            </div>
+          </div>
+          <div class="campo">
+            <label>Visibilidad del curso</label>
+            <div class="visibilidad-opciones">
+              <label class="visibilidad-opcion op-privado">
+                <input type="radio" name="cVisibilidad" value="privado" checked>
+                <i class="fa-solid fa-lock"></i>
+                <span>Con código<span class="vis-desc">Solo quien tenga el código</span></span>
+              </label>
+              <label class="visibilidad-opcion op-publico">
+                <input type="radio" name="cVisibilidad" value="publico">
+                <i class="fa-solid fa-globe"></i>
+                <span>Público<span class="vis-desc">Aparece en el inicio</span></span>
+              </label>
+            </div>
+          </div>
+          <div class="campo">
+            <label>Asignar estudiantes</label>
+            <div class="tabs-asignar">
+              <button type="button" class="tab-asignar activo-tab" data-panel-tab="lista"><i class="fa-solid fa-list"></i> Seleccionar</button>
+              <button type="button" class="tab-asignar" data-panel-tab="codigo-info"><i class="fa-solid fa-key"></i> Por código</button>
+            </div>
+            <div id="panel-lista" class="panel-tab">
+              <input type="text" id="buscarEstudiante" placeholder="Buscar estudiante...">
+              <div id="listaCheckEstudiantes" class="lista-check"></div>
+            </div>
+            <div id="panel-codigo-info" class="panel-tab oculto">
+              <p class="info-codigo"><i class="fa-solid fa-circle-info"></i> Al guardar se genera un código único. Compártelo con tus estudiantes.</p>
+            </div>
+          </div>
+          <div id="alertaCrearCurso" class="alerta"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn-secundario" id="btnCancelarModalCurso">Cancelar</button>
+            <button type="submit" class="btn-primario"><i class="fa-solid fa-floppy-disk"></i> Guardar curso</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       MODAL — Editar curso
+  ══════════════════════════════════════════════ -->
+  <div id="modalEditarCurso" class="modal-overlay" style="display:none;" aria-modal="true" role="dialog">
+    <div class="modal-caja">
+      <div class="modal-cabecera">
+        <h2><i class="fa-solid fa-pen"></i> Editar curso</h2>
+        <button class="modal-cerrar" id="btnCerrarModalEditar" aria-label="Cerrar"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="modal-cuerpo">
+        <form id="formEditarCurso" class="formulario" novalidate>
+          <div class="row g-3">
+            <div class="col-sm-8">
+              <div class="campo">
+                <label for="eNombre">Nombre del curso</label>
+                <input type="text" id="eNombre" placeholder="Ej: Inglés básico A1">
+                <small class="error" id="errENombre"></small>
+              </div>
+            </div>
+            <div class="col-sm-4">
+              <div class="campo">
+                <label for="eNivel">Nivel</label>
+                <select id="eNivel">
+                  <option value="">— Selecciona —</option>
+                  <option value="basico">Básico</option>
+                  <option value="intermedio">Intermedio</option>
+                  <option value="avanzado">Avanzado</option>
+                </select>
+                <small class="error" id="errENivel"></small>
+              </div>
+            </div>
+          </div>
+          <div class="campo">
+            <label for="eDesc">Descripción</label>
+            <textarea id="eDesc" rows="2" placeholder="¿De qué trata el curso?"></textarea>
+          </div>
+          <div class="campo">
+            <label>Imagen del curso <span class="nota-opt">(opcional)</span></label>
+            <div class="drop-imagen" id="dropImagenEdit">
+              <i class="fa-solid fa-image"></i>
+              <span>Arrastra una imagen o <label for="eImagen" style="color:var(--rosa);cursor:pointer;text-decoration:underline;">selecciona</label></span>
+              <input type="file" id="eImagen" accept="image/*" style="display:none;">
+            </div>
+            <div id="prevImagenEdit" style="display:none;margin-top:.6rem;">
+              <img id="imgPreviewEdit" src="" alt="Preview" style="width:100%;max-height:160px;object-fit:cover;border-radius:10px;">
+              <button type="button" id="btnQuitarImgEdit" class="btn-texto-rosa mt-1"><i class="fa-solid fa-xmark"></i> Quitar imagen</button>
+            </div>
+          </div>
+          <div id="alertaEditarCurso" class="alerta"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn-secundario" id="btnCancelarModalEditar">Cancelar</button>
+            <button type="submit" class="btn-primario"><i class="fa-solid fa-floppy-disk"></i> Guardar cambios</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       MODAL — Crear / Editar módulo
+  ══════════════════════════════════════════════ -->
+  <div id="modalModulo" class="modal-overlay" style="display:none;" aria-modal="true" role="dialog">
+    <div class="modal-caja">
+      <div class="modal-cabecera">
+        <h2 id="modalModuloTitulo"><i class="fa-solid fa-layer-group"></i> Nuevo módulo</h2>
+        <button class="modal-cerrar" id="btnCerrarModalModulo" aria-label="Cerrar"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="modal-cuerpo">
+        <form id="formModulo" class="formulario" novalidate>
+          <input type="hidden" id="moduloId">
+          <div class="campo">
+            <label for="moduloTitulo">Título del módulo</label>
+            <input type="text" id="moduloTitulo" placeholder="Ej: Unidad 1 — Saludos">
+            <small class="error" id="errModuloTitulo"></small>
+          </div>
+          <div class="campo">
+            <label for="moduloDesc">Descripción breve <span class="nota-opt">(opcional)</span></label>
+            <textarea id="moduloDesc" rows="2" placeholder="¿De qué trata este módulo?"></textarea>
+          </div>
+          <div id="alertaModulo" class="alerta"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn-secundario" id="btnCancelarModalModulo">Cancelar</button>
+            <button type="submit" class="btn-primario"><i class="fa-solid fa-floppy-disk"></i> Guardar módulo</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       MODAL — Agregar contenido a un módulo
+  ══════════════════════════════════════════════ -->
+  <div id="modalContenidoModulo" class="modal-overlay" style="display:none;" aria-modal="true" role="dialog">
+    <div class="modal-caja">
+      <div class="modal-cabecera">
+        <h2 id="modalContenidoTitulo"><i class="fa-solid fa-circle-plus"></i> Agregar contenido</h2>
+        <button class="modal-cerrar" id="btnCerrarModalContenido" aria-label="Cerrar"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="modal-cuerpo">
+        <div class="tabs-tipo-contenido" id="tabsTipoContenido">
+          <button type="button" class="tab-cont activo-tab" data-cont="texto"><i class="fa-solid fa-align-left"></i> Texto</button>
+          <button type="button" class="tab-cont" data-cont="archivo"><i class="fa-solid fa-paperclip"></i> Archivo</button>
+          <button type="button" class="tab-cont" data-cont="tarea"><i class="fa-solid fa-clipboard-list"></i> Tarea</button>
+        </div>
+        <input type="hidden" id="contenidoModuloId">
+        <input type="hidden" id="contenidoItemId">
+
+        <form id="formContenidoTexto" class="formulario cont-panel" data-cont-panel="texto">
+          <div class="campo"><label>Título</label><input type="text" id="ctTitulo" placeholder="Ej: Introducción al módulo"></div>
+          <div class="campo"><label>Contenido</label><textarea id="ctContenido" rows="5" placeholder="Escribe el contenido del módulo..."></textarea></div>
+          <div id="alertaContTexto" class="alerta"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn-secundario btn-cerrar-contenido">Cancelar</button>
+            <button type="submit" class="btn-primario" id="btnGuardarTexto"><i class="fa-solid fa-floppy-disk"></i> Agregar texto</button>
+          </div>
+        </form>
+
+        <form id="formContenidoArchivo" class="formulario cont-panel oculto" data-cont-panel="archivo">
+          <div class="campo"><label>Nombre del archivo</label><input type="text" id="caNombre" placeholder="Ej: Presentación unidad 1"></div>
+          <p class="nota-combinable"><i class="fa-solid fa-circle-info"></i> Puedes agregar un enlace, subir un archivo, o ambos — ninguno es obligatorio.</p>
+          <div class="campo">
+            <label>Enlace (URL) <span class="nota-opt">(opcional)</span></label>
+            <input type="url" id="archivoUrl" placeholder="https://...">
+          </div>
+          <div class="campo">
+            <label>Subir archivo <span class="nota-opt">(opcional)</span></label>
+            <input type="file" id="archivoFile" accept="*/*" class="input-file">
+            <small class="nota">Se subirá al almacenamiento del curso (máx. 50 MB).</small>
+          </div>
+          <div id="archivoActualInfo" class="archivo-actual-info oculto"></div>
+          <div class="progreso-upload oculto" id="progresoUpload">
+            <div class="progreso-bar"><div class="progreso-fill" id="progresoFill"></div></div>
+            <span id="progresoTexto">Subiendo...</span>
+          </div>
+          <div id="alertaContArchivo" class="alerta"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn-secundario btn-cerrar-contenido">Cancelar</button>
+            <button type="submit" class="btn-primario" id="btnGuardarArchivo"><i class="fa-solid fa-cloud-arrow-up"></i> Agregar archivo</button>
+          </div>
+        </form>
+
+        <form id="formContenidoTarea" class="formulario cont-panel oculto" data-cont-panel="tarea">
+          <div class="row g-2">
+            <div class="col-sm-8"><div class="campo"><label>Título</label><input type="text" id="tareaTitulo" placeholder="Título de la tarea"></div></div>
+            <div class="col-sm-4"><div class="campo"><label>Fecha límite</label><input type="date" id="tareaFecha"></div></div>
+          </div>
+          <div class="campo"><label>Descripción</label><textarea id="tareaDesc" rows="2" placeholder="Instrucciones..."></textarea></div>
+          <p class="nota-combinable"><i class="fa-solid fa-circle-info"></i> Puedes agregar un enlace de referencia, adjuntar un archivo, o ambos — ninguno es obligatorio.</p>
+          <div class="campo">
+            <label>Enlace de referencia <span class="nota-opt">(opcional)</span></label>
+            <input type="url" id="tareaUrl" placeholder="https://...">
+          </div>
+          <div class="campo">
+            <label>Adjuntar archivo <span class="nota-opt">(opcional)</span></label>
+            <input type="file" id="tareaFile" class="input-file">
+          </div>
+          <div id="tareaArchivoActualInfo" class="archivo-actual-info oculto"></div>
+          <div class="campo campo-corto mt-2"><label>Puntos</label><input type="number" id="tareaPuntos" placeholder="Ej: 20" min="0"></div>
+          <div id="alertaContTarea" class="alerta"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn-secundario btn-cerrar-contenido">Cancelar</button>
+            <button type="submit" class="btn-primario" id="btnGuardarTarea"><i class="fa-solid fa-plus"></i> Crear tarea</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       MODAL — Confirmación genérica
+  ══════════════════════════════════════════════ -->
+  <div id="modalConfirmar" class="modal-overlay modal-confirmar-overlay" style="display:none;" aria-modal="true" role="alertdialog">
+    <div class="modal-confirmar-caja">
+      <div class="modal-confirmar-icono" id="confirmarIcono"><i class="fa-solid fa-trash"></i></div>
+      <h3 id="confirmarTitulo">¿Eliminar este elemento?</h3>
+      <p id="confirmarMensaje">Esta acción no se puede deshacer.</p>
+      <div class="modal-confirmar-acciones">
+        <button type="button" class="btn-secundario" id="btnConfirmarCancelar">Cancelar</button>
+        <button type="button" class="btn-peligro-solido" id="btnConfirmarAceptar"><i class="fa-solid fa-trash"></i> Eliminar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ Modal calificar entrega (docente) ═══ -->
+<div id="modalCalificarOverlay" class="modal-overlay" style="display:none;">
+  <div class="modal-caja" style="max-width:460px;">
+    <div class="modal-cabecera">
+      <h2><i class="fa-solid fa-star" style="color:#f5a623;"></i> Calificar entrega</h2>
+      <button class="modal-cerrar" id="btnCerrarCalificar">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+    <div class="modal-cuerpo" style="display:flex;flex-direction:column;gap:1rem;">
+
+      <div style="font-size:0.85rem;color:var(--texto);font-weight:700;">
+        <i class="fa-solid fa-user-graduate" style="margin-right:0.3rem;color:var(--lila);"></i>
+        <span id="calificarNombreEst"></span>
+      </div>
+      <div style="font-size:0.78rem;color:var(--texto-claro);font-weight:600;">
+        <i class="fa-regular fa-clock" style="margin-right:0.3rem;"></i>
+        Entregado el <span id="calificarFecha"></span>
+      </div>
+
+      <div id="calificarArchivoWrap">
+        <a id="calificarArchivoLink" href="#" target="_blank"
+           style="display:inline-flex;align-items:center;gap:0.5rem;
+             background:#f0ecff;color:var(--lila);border:1.3px solid #d4c4fb;
+             border-radius:10px;padding:0.55rem 1rem;font-size:0.85rem;
+             font-weight:700;text-decoration:none;">
+          <i class="fa-solid fa-file-arrow-down"></i> Ver archivo entregado
+        </a>
+      </div>
+
+      <div id="calificarComentarioWrap" style="display:none;">
+        <p style="font-size:0.82rem;font-weight:700;color:var(--texto);margin-bottom:0.4rem;">
+          <i class="fa-solid fa-comment-dots" style="color:var(--rosa);margin-right:0.3rem;"></i> Comentario del estudiante
+        </p>
+        <div id="calificarComentarioTexto"
+             style="background:var(--fondo);border:1.5px solid var(--borde);
+               border-radius:10px;padding:0.75rem 1rem;font-size:0.88rem;
+               color:var(--texto);line-height:1.6;white-space:pre-wrap;">
+        </div>
+      </div>
+
+      <form id="formCalificar" class="formulario" novalidate style="gap:0.9rem;">
+        <input type="hidden" id="calificarEntregaId">
+        <div class="row g-2">
+          <div class="col-sm-6">
+            <div class="campo">
+              <label for="calificarNota">Nota</label>
+              <input type="number" id="calificarNota" step="0.1" min="0" placeholder="Ej: 18">
+              <small class="error" id="errCalificarNota"></small>
+            </div>
+          </div>
+          <div class="col-sm-6" style="display:flex;align-items:flex-end;">
+            <span id="calificarPuntosMax" style="font-size:0.78rem;color:var(--texto-claro);font-weight:600;padding-bottom:0.8rem;"></span>
+          </div>
+        </div>
+        <div class="campo">
+          <label for="calificarFeedback">Feedback para el estudiante <span class="nota-opt">(opcional)</span></label>
+          <textarea id="calificarFeedback" rows="3" placeholder="Comentarios sobre la entrega..."></textarea>
+        </div>
+        <div id="alertaCalificar" class="alerta"></div>
+        <div class="modal-footer">
+          <button type="button" class="btn-secundario" id="btnCancelarCalificar">Cancelar</button>
+          <button type="submit" class="btn-primario"><i class="fa-solid fa-floppy-disk"></i> Guardar calificación</button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</div>
+
+  <footer id="footer"></footer>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../js/panel/reloj.js"></script>
+  <script src="../js/panel/saludo.js"></script>
+  <script src="../js/docente/saludo_docente.js"></script>
+  <script src="../js/docente/modal_crear_curso_docente.js"></script>
+  <script src="../js/docente/tabs_docente.js"></script>
+  <script src="../js/docente/atajos_teclado_docente.js"></script>
+  <script type="module" src="../js/header_footer.js"></script>
+  <script type="module" src="../js/panel_docente.js"></script>
+  <script type="module" src="/js/login.js"></script>
+</body>
+</html>
+

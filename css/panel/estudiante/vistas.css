@@ -1,0 +1,151 @@
+/* ══ Panel Estudiante — Vistas: cursos, aside actividad, perfil ══ */
+
+/* Layout principal vista cursos estudiante */
+.cursos-aside-wrap {
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: 2.2rem;
+  align-items: flex-start;
+}
+
+/* Espaciado vistas secundarias — separación del borde del aside */
+#vista-anuncios,
+#vista-tareas,
+#vista-archivos,
+#vista-disponibles {
+  padding: 2rem 2.8rem 2rem 2.2rem;
+}
+
+/* Lista de cursos estilo tarjeta expandible */
+.lista-cursos-est {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+/* Aside actividad */
+.aside-actividad {
+  position: sticky;
+  top: calc(72px + 1.5rem);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Modo vista previa: el banner superior suma 48px al header */
+body.vista-previa-activa .aside-actividad {
+  top: calc(72px + 48px + 1.5rem);
+}
+
+.aside-bloque {
+  background: var(--blanco);
+  border: 1.5px solid var(--borde);
+  border-radius: 16px;
+  padding: 1rem 1.1rem;
+  box-shadow: 0 2px 10px var(--sombra);
+}
+
+.aside-bloque h4 {
+  font-family: 'Paytone One', sans-serif;
+  font-size: 0.78rem;
+  color: var(--texto);
+  margin-bottom: 0.7rem;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+.aside-bloque h4 i {
+  background: var(--gradiente);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Formulario compacto (unirse a curso) */
+.formulario-compacto {
+  max-width: 420px;
+}
+
+/* Filtros de cursos */
+.filtros-cursos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+/* Mini cursos disponibles sidebar */
+.mini-curso-item {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--borde);
+}
+.mini-curso-item:last-child { border-bottom: none; }
+.mini-curso-img {
+  width: 38px; height: 38px;
+  border-radius: 8px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+.mini-curso-placeholder {
+  width: 38px; height: 38px;
+  border-radius: 8px;
+  background: #ede9fe;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--lila);
+  font-size: 0.9rem;
+  flex-shrink: 0;
+}
+.mini-curso-info { flex: 1; min-width: 0; }
+.mc-nombre { font-size: 0.82rem; font-weight: 700; color: var(--texto); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mc-docente { font-size: 0.72rem; color: var(--texto-claro); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* Perfil nombre visible */
+.perfilNombreCompleto {
+  font-family: 'Paytone One', sans-serif;
+  font-size: 1.1rem;
+  color: var(--texto);
+  margin-bottom: 0.2rem;
+}
+
+/* Dark mode — extras panel estudiante */
+body.dark .aside-bloque {
+  background: #1a1a2e !important;
+  border-color: #2d2d4a !important;
+}
+body.dark .aside-bloque h4 { color: #f0f0ff !important; }
+body.dark .mini-curso-placeholder { background: #241a3d !important; color: #c4b5fd !important; }
+body.dark .mini-curso-item { border-color: #2d2d4a !important; }
+body.dark .mc-nombre { color: #f0f0ff !important; }
+body.dark .mc-docente { color: #64748b !important; }
+body.dark .perfilNombreCompleto { color: #f0f0ff !important; }
+body.dark .btn-vista-sidebar {
+  border-color: rgba(255,255,255,0.3) !important;
+  background: rgba(255,255,255,0.1) !important;
+  color: #fff !important;
+}
+body.dark .btn-vista-sidebar:hover {
+  background: rgba(255,255,255,0.2) !important;
+}
+
+/* Responsive panel estudiante */
+@media (max-width: 900px) {
+  .cursos-aside-wrap {
+    grid-template-columns: 1fr;
+  }
+  .aside-actividad {
+    position: static;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  }
+}
+
+#detalleModulosEst {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  margin-top: 0.5rem;
+  padding-bottom: 2rem;
+}

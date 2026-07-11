@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<!-- ══ Formulario para solicitar el correo de restablecimiento de contraseña. Usa js/solicitar_reset.js. ══ -->
+<html lang="es" data-bs-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recuperar contraseña — ENIT Academy</title>
+  <script>const dm=localStorage.getItem("modoOscuro")==="true";if(dm){document.documentElement.setAttribute("data-bs-theme","dark");document.documentElement.classList.add("dark");}</script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Paytone+One&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/variables.css">
+  <link rel="stylesheet" href="/css/header_footer.css">
+  <link rel="stylesheet" href="/css/verificar-email.css">
+</head>
+<body>
+
+<header id="header"></header>
+
+<main class="verificar-main">
+  <div class="card">
+    <div class="card-header">
+      <div class="card-logo">ENIT Academy</div>
+      <div class="icon-wrap">🔒</div>
+      <h1>¿Olvidaste tu contraseña?</h1>
+      <p>Ingresa tu correo y te enviaremos<br>un enlace para restablecerla.</p>
+    </div>
+
+    <div class="card-body" id="vista-formulario">
+      <div class="campo" style="text-align:left; margin-bottom: 1.2rem;">
+        <label for="email" style="display:block; font-size:0.81rem; font-weight:700; color:var(--texto); margin-bottom:0.4rem;">Correo electrónico</label>
+        <input type="email" id="email" placeholder="tu@correo.com" autocomplete="email"
+          style="width:100%; padding:0.62rem 0.9rem; border:1.8px solid var(--borde); border-radius:10px; font-family:'Nunito',sans-serif; font-size:0.9rem; color:var(--texto); background:var(--blanco); outline:none; transition:border-color 0.2s, box-shadow 0.2s;">
+      </div>
+      <div class="retroalimentacion" id="retroalimentacion"></div>
+      <button class="btn-verify" id="btn-send">
+        <span class="cargando"></span>
+        <span class="btn-label"><i class="fa-solid fa-paper-plane"></i> Enviar enlace</span>
+      </button>
+      <div class="reenviar">
+        <a href="/index.html" style="color:var(--texto-claro); text-decoration:none; font-weight:700; font-size:0.85rem;">
+          <i class="fa-solid fa-arrow-left"></i> Volver al inicio de sesión
+        </a>
+      </div>
+    </div>
+
+    <div class="capa-exito" id="vista-exito">
+      <div class="circulo-check">✓</div>
+      <h2>¡Correo enviado!</h2>
+      <p>Revisa tu bandeja de entrada y sigue el enlace para crear tu nueva contraseña.</p>
+    </div>
+  </div>
+</main>
+
+<footer id="footer"></footer>
+
+<script type="module" src="../js/solicitar_reset.js"></script>
+<script type="module" src="/js/login.js"></script>
+<script type="module" src="/js/header_footer.js"></script>
+</body>
+</html>

@@ -1,0 +1,65 @@
+/* ══ Panel — Botones ══ */
+
+.btn-volver {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  background: none; border: none;
+  font-family: 'Nunito', sans-serif; font-size: 0.87rem; font-weight: 700;
+  color: var(--texto-claro); cursor: pointer; padding: 0; margin-bottom: 1rem;
+}
+.btn-volver:hover { color: var(--rosa); }
+
+.btn-mini { padding: 0.3rem 0.6rem; font-size: 0.75rem; border-radius: 8px; margin-left: auto; }
+
+/* ── Botones ───────────────────────────────── */
+.btn-primario {
+  display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+  padding: 0.75rem 1.8rem; background: var(--gradiente);
+  color: var(--blanco); border: none; border-radius: 50px;
+  font-family: 'Nunito', sans-serif; font-size: 0.94rem; font-weight: 800;
+  cursor: pointer; box-shadow: 0 4px 14px var(--sombra);
+  transition: opacity 0.2s, transform 0.15s;
+}
+.btn-primario:hover:not(:disabled) { opacity: 0.88; transform: translateY(-2px); }
+.btn-primario:disabled { background: #e2d5ee; color: #b8a8cc; box-shadow: none; cursor: not-allowed; }
+.btn-pequeno { padding: 0.48rem 1.1rem; font-size: 0.83rem; }
+
+.btn-peligro {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  padding: 0.48rem 1.1rem; border: 1.5px solid var(--borde);
+  border-radius: 50px; background: none;
+  font-family: 'Nunito', sans-serif; font-size: 0.83rem; font-weight: 700;
+  color: var(--texto-claro); cursor: pointer; margin-bottom: 1rem; transition: all 0.15s;
+}
+.btn-peligro:hover { border-color: var(--color-error); color: var(--color-error); background: #fff0f5; }
+
+.btn-icono {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 32px; height: 32px; border-radius: 8px;
+  border: 1.5px solid var(--borde); background: none;
+  color: var(--texto-claro); cursor: pointer; font-size: 0.85rem;
+  text-decoration: none; transition: all 0.15s; flex-shrink: 0;
+}
+.btn-icono:hover { border-color: var(--rosa); color: var(--rosa); }
+
+.btn-ojo-vis {
+  width:32px; height:32px;
+  border-radius:50%;
+  border:1.5px solid var(--borde, #e8e0f0);
+  background:none;
+  display:flex; align-items:center; justify-content:center;
+  font-size:.9rem; cursor:pointer;
+  color:var(--rosa, #ff4fa0);
+  transition:background .15s, border-color .15s, transform .15s;
+  flex-shrink:0;
+}
+.btn-ojo-vis:hover { background:rgba(255,79,160,.12); border-color:var(--rosa); transform:scale(1.12); }
+
+.btn-texto-rosa { background:none; border:none; color:var(--rosa,#ff4fa0); font-size:.82rem; font-weight:700; cursor:pointer; padding:0; font-family:'Nunito',sans-serif; }
+.btn-texto-rosa:hover { text-decoration:underline; }
+
+.btn-icono-peq { width: 30px; height: 30px; border-radius: 8px; border: 1.5px solid var(--borde); background: none; color: var(--texto-claro); display: flex; align-items: center; justify-content: center; font-size: 0.78rem; cursor: pointer; transition: all 0.15s; flex-shrink: 0; }
+.btn-icono-peq:hover { border-color: var(--rosa); color: var(--rosa); background: #ffe0f0; }
+.btn-icono-peq.peligro:hover { border-color: var(--color-error); color: var(--color-error); background: #fff0f5; }
+
+.btn-peligro-solido { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.7rem 1.2rem; background: linear-gradient(135deg, #ff4f7c, #d6185a); color: #fff; border: none; border-radius: 50px; font-family: 'Nunito', sans-serif; font-size: 0.9rem; font-weight: 800; cursor: pointer; box-shadow: 0 4px 14px rgba(214, 24, 90, 0.3); transition: opacity 0.2s, transform 0.15s; }
+.btn-peligro-solido:hover { opacity: 0.9; transform: translateY(-1px); }
