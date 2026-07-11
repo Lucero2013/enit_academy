@@ -4,6 +4,10 @@
 :root {
   --fondo: #fff8fc;
 }
+body.vista-previa-activa .panel-sidebar {
+  top: calc(72px + 48px);
+  height: calc(100vh - 72px - 48px);
+}
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
